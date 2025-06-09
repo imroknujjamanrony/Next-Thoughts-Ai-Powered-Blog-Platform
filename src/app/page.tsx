@@ -9,3 +9,4 @@ export default function Home() {
    </div>
   );
 }
+//learning project so that i can lear how to work behind the scenes with next js
