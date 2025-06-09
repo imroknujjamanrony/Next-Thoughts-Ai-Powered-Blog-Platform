@@ -1,12 +1,12 @@
+import Banner from "./components/Banner";
 import Footer from "./components/shared/Footer";
 
 
 export default function Home() {
   return (
    <div>
-     <Footer></Footer>
-     <Footer></Footer>
+     <Banner></Banner>
+    
    </div>
   );
 }
-//learning project so that i can lear how to work behind the scenes with next js
