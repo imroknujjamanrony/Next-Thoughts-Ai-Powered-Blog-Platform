@@ -6,6 +6,7 @@ export default function Navbar() {
     { label: 'Add Blog', href: '/add-blog' },
     { label: 'My Blogs', href: '/my-blogs' },
     { label: 'Dashboard', href: '/dashboard' },
+    
   ];
 
   return (
@@ -53,7 +54,12 @@ export default function Navbar() {
         </ul>
       </div>
       <div className="navbar-end">
-        <a className="btn">Button</a>
+        <Link href="/login" className="btn">
+          Login
+        </Link>
+        <Link href="/signup" className="btn">
+          Signup
+        </Link>
       </div>
     </div>
   );
