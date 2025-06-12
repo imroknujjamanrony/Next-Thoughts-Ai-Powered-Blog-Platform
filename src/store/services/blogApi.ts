@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// Define blog post type
 export type BlogPost = {
+  _id?: string;
   title: string;
   description: string;
   tags: string;
@@ -14,7 +14,7 @@ export const blogApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
   tagTypes: ['Blog'],
   endpoints: (builder) => ({
-    // POST blog
+    // ✅ POST: Add blog
     addBlog: builder.mutation<{ message: string; blogId: string }, BlogPost>({
       query: (newBlog) => ({
         url: 'add-blogs',
@@ -23,7 +23,46 @@ export const blogApi = createApi({
       }),
       invalidatesTags: ['Blog'],
     }),
+
+    // ✅ GET: All blogs
+    getAllBlogs: builder.query<BlogPost[], void>({
+      query: () => 'blogs',
+      providesTags: ['Blog'],
+    }),
+
+    // ✅ GET: Single blog by ID
+    getBlogById: builder.query<BlogPost, string>({
+      query: (id) => `blogs/${id}`,
+    }),
+
+    // ✅ DELETE: Blog by ID
+    deleteBlog: builder.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: `blogs/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Blog'],
+    }),
+
+    // ✅ PATCH: Update blog by ID
+    updateBlog: builder.mutation<
+      { message: string },
+      { id: string; updatedData: Partial<BlogPost> }
+    >({
+      query: ({ id, updatedData }) => ({
+        url: `blogs/${id}`,
+        method: 'PATCH',
+        body: updatedData,
+      }),
+      invalidatesTags: ['Blog'],
+    }),
   }),
 });
 
-export const { useAddBlogMutation } = blogApi;
+export const {
+  useAddBlogMutation,
+  useGetAllBlogsQuery,
+  useGetBlogByIdQuery,
+  useDeleteBlogMutation,
+  useUpdateBlogMutation,
+} = blogApi;

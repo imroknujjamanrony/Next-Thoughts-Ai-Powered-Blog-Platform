@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 export default function Navbar() {
   const links = [
+    { label: 'All Blog', href: '/all-blogs' },
     { label: 'Add Blog', href: '/add-blog' },
     { label: 'My Blogs', href: '/my-blogs' },
     { label: 'Dashboard', href: '/dashboard' },
