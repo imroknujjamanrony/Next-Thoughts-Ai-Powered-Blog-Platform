@@ -1,8 +1,9 @@
 'use client';
 
+import { useAddBlogMutation } from '@/store/services/blogApi';
 import { useState } from 'react';
 
-// ✅ 1. Define form fields type
+
 type FormFields = {
   title: string;
   description: string;
@@ -12,7 +13,6 @@ type FormFields = {
 };
 
 export default function AddBlogPage() {
-  // ✅ 2. Strongly typed form state
   const [form, setForm] = useState<FormFields>({
     title: '',
     description: '',
@@ -21,22 +21,36 @@ export default function AddBlogPage() {
     content: '',
   });
 
-  // ✅ 3. Clean generic change handler (no need to type the event itself)
+  const [createBlog, { isLoading }] = useAddBlogMutation(); // ✅ FIXED
+
   const handleChange = (field: keyof FormFields, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ✅ 4. Basic validation (you can improve this or use Zod/Yup)
     if (!form.title || !form.content) {
       alert('Title and Content are required!');
       return;
     }
 
-    console.log('📝 Submitted form:', form);
-    // → Replace with API logic
+    try {
+      const result = await createBlog(form).unwrap(); // ✅ RTK Mutation
+      console.log('✅ Blog created:', result);
+      alert('Blog published successfully!');
+
+      setForm({
+        title: '',
+        description: '',
+        tags: '',
+        coverImage: '',
+        content: '',
+      });
+    } catch (error: any) {
+      console.error('❌ Error:', error);
+      alert('Failed to publish blog');
+    }
   };
 
   return (
@@ -99,8 +113,9 @@ export default function AddBlogPage() {
         <button
           type="submit"
           className="btn btn-primary w-full text-white font-semibold"
+          disabled={isLoading}
         >
-          ✨ Publish Blog
+          {isLoading ? 'Publishing...' : '✨ Publish Blog'}
         </button>
       </form>
     </div>
