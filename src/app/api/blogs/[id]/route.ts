@@ -1,12 +1,34 @@
-// app/api/blogs/[id]/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCollection, collection } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: any
+) {
+  const id = params.id;
   try {
     const blogsCollection = await getCollection(collection.blog_collection);
-    const result = await blogsCollection.deleteOne({ _id: new ObjectId(params.id) });
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!blog) {
+      return NextResponse.json({ message: "Blog not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(blog);
+  } catch (error) {
+    return NextResponse.json({ message: "Failed to fetch blog" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: any
+) {
+  const id = params.id;
+  try {
+    const blogsCollection = await getCollection(collection.blog_collection);
+    const result = await blogsCollection.deleteOne({ _id: new ObjectId(id) });
 
     if (!result.deletedCount) {
       return NextResponse.json({ message: "Blog not found" }, { status: 404 });
@@ -18,17 +40,17 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   }
 }
 
-
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: any
 ) {
+  const id = params.id;
   try {
     const { title, description, tags, coverImage, content } = await req.json();
     const blogsCollection = await getCollection(collection.blog_collection);
 
     const result = await blogsCollection.updateOne(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(id) },
       {
         $set: {
           title,
@@ -47,24 +69,5 @@ export async function PATCH(
     return NextResponse.json({ message: "Blog updated successfully" });
   } catch (error) {
     return NextResponse.json({ message: "Failed to update blog" }, { status: 500 });
-  }
-}
-
-
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const blogsCollection = await getCollection(collection.blog_collection);
-    const blog = await blogsCollection.findOne({ _id: new ObjectId(params.id) });
-
-    if (!blog) {
-      return NextResponse.json({ message: "Blog not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(blog);
-  } catch (error) {
-    return NextResponse.json({ message: "Failed to fetch blog" }, { status: 500 });
   }
 }
