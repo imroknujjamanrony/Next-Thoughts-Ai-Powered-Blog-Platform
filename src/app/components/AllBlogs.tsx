@@ -5,14 +5,19 @@ import {
   useUpdateBlogMutation,
   useDeleteBlogMutation,
 } from '@/store/services/blogApi';
+import Link from 'next/link';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 export default function AllBlogs() {
   const { data: blogs, isLoading, isError } = useGetAllBlogsQuery();
   const [updateBlog] = useUpdateBlogMutation();
   const [deleteBlog] = useDeleteBlogMutation();
   const [editBlog, setEditBlog] = useState<any>(null);
+  
+const router = useRouter();
+
 
   const handleEdit = (blog: any) => {
     setEditBlog(blog);
@@ -75,12 +80,14 @@ export default function AllBlogs() {
               className="w-full h-48 object-cover rounded"
             />
             <div className="flex justify-between flex-wrap gap-2 mt-2">
-              <button
-                onClick={() => Swal.fire('Blog Details', blog.content, 'info')}
-                className="btn btn-sm btn-info"
-              >
-                Details
-              </button>
+         <button
+  onClick={() => router.push(`/blogs/${blog._id}`)}
+  className="btn btn-sm btn-info"
+>
+  Details
+</button>
+
+
               <button
                 onClick={() => handleEdit(blog)}
                 className="btn btn-sm btn-warning"
@@ -88,7 +95,7 @@ export default function AllBlogs() {
                 Edit
               </button>
               <button
-                onClick={() => handleDelete(blog._id)}
+                onClick={() => handleDelete(blog._id ? blog._id  : '')}
                 className="btn btn-sm btn-error"
               >
                 Delete

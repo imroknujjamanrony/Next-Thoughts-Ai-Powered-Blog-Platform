@@ -49,3 +49,22 @@ export async function PATCH(
     return NextResponse.json({ message: "Failed to update blog" }, { status: 500 });
   }
 }
+
+
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const blogsCollection = await getCollection(collection.blog_collection);
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(params.id) });
+
+    if (!blog) {
+      return NextResponse.json({ message: "Blog not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(blog);
+  } catch (error) {
+    return NextResponse.json({ message: "Failed to fetch blog" }, { status: 500 });
+  }
+}
