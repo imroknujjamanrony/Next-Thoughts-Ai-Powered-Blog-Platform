@@ -2,6 +2,7 @@
 import Link from 'next/link';
 
 export default function Navbar() {
+  const user=true;
   const links = [
     { label: 'All Blog', href: '/all-blogs' },
     { label: 'Add Blog', href: '/add-blog' },
@@ -55,12 +56,25 @@ export default function Navbar() {
         </ul>
       </div>
       <div className="navbar-end">
-        <Link href="/login" className="btn">
-          Login
-        </Link>
-        <Link href="/signup" className="btn">
-          Signup
-        </Link>
+
+{
+  user ? (
+    <button className='btn'>Logout</button>
+  ) : (
+    <>
+      <Link href="/signup" className="btn">
+        Signup
+      </Link>
+      <Link href="/login" className="btn">
+        Login
+      </Link>
+    </>
+  )
+}
+
+
+       
+      
       </div>
     </div>
   );
