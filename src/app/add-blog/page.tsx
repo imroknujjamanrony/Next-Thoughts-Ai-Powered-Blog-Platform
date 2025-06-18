@@ -3,7 +3,7 @@
 import { useAddBlogMutation } from '@/store/services/blogApi';
 import { useState } from 'react';
 
-
+// Define the form fields type and its called type alias
 type FormFields = {
   title: string;
   description: string;
@@ -11,6 +11,13 @@ type FormFields = {
   coverImage: string;
   content: string;
 };
+
+//we can use record utility to validate the form fields
+// type FieldKeys = 'title' | 'description' | 'tags' | 'coverImage' | 'content';
+// type FormFields = Record<FieldKeys, string>;
+
+
+
 
 export default function AddBlogPage() {
   const [form, setForm] = useState<FormFields>({
@@ -121,3 +128,4 @@ export default function AddBlogPage() {
     </div>
   );
 }
+

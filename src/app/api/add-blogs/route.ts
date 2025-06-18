@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, getCollection } from '@/lib/mongodb';
 
-// Blog post type definition
+// Blog post type definition and its called type alias
 type BlogPost = {
   title: string;
   description: string;
