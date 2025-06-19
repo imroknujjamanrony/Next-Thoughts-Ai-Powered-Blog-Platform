@@ -2,7 +2,7 @@
 import Link from 'next/link';
 
 export default function Navbar() {
-  const user=true;
+  const user=false;
   const links = [
     { label: 'All Blog', href: '/all-blogs' },
     { label: 'Add Blog', href: '/add-blog' },

@@ -9,7 +9,8 @@ type SignupForm = {
   confirmPassword: string;
 };
 
-type Errors = Partial<Record<keyof SignupForm, string>>;
+//we use partial to make all fields optional
+type Errors = Partial<Record<keyof SignupForm, string>>; //we use record when all the input fields type are same
 
 export default function Signup() {
   const [form, setForm] = useState<SignupForm>({
@@ -129,3 +130,7 @@ export default function Signup() {
     </div>
   );
 }
+
+
+
+
