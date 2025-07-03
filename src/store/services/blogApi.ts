@@ -24,6 +24,16 @@ export const blogApi = createApi({
       invalidatesTags: ['Blog'],
     }),
 
+    //post userdata
+    postUserData: builder.mutation<{message:string,userId:string},BlogPost>({
+      query:(newUserData) => ({
+        url: 'signup',
+        method: 'POST',
+        body: newUserData,
+      }),
+      invalidatesTags: ['User'],
+    }),
+
     // ✅ GET: All blogs
     getAllBlogs: builder.query<BlogPost[], void>({
       query: () => 'blogs',
@@ -66,6 +76,7 @@ export const blogApi = createApi({
 });
 
 export const {
+   usePostUserDataMutation, 
   useAddBlogMutation,
   useGetAllBlogsQuery,
   useGetBlogByIdQuery,

@@ -1,5 +1,7 @@
+import { dbConnect } from '@/lib/dbConnect';
+import Blog from '@/models/blogModel';
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, getCollection } from '@/lib/mongodb';
+
 
 // Blog post type definition and its called type alias
 type BlogPost = {
@@ -25,20 +27,22 @@ export async function POST(req: NextRequest) {
     }
 
     // Connect to MongoDB collection
-    const blogCollection = await getCollection(collection.blog_collection);
-
-    // Insert the new blog document
-    const result = await blogCollection.insertOne({
+    dbConnect()
+    const blog=new Blog({
       title,
       description,
       tags: tags.split(',').map((tag) => tag.trim()), // convert to array
       coverImage,
       content,
       createdAt: new Date(),
-    });
+    })
+
+    const newBlog=await blog.save();
+   
+
 
     return NextResponse.json(
-      { message: '✅ Blog created successfully', blogId: result.insertedId },
+      { message: '✅ Blog created successfully', blogId: newBlog._id },
       { status: 201 }
     );
   } catch (error) {

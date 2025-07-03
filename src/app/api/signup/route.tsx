@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
     const {name,email,password}=reqBody;
     // Basic validation
     console.log(reqBody)
-    const user=await User.find({email})
-    if(user){
-      return NextResponse.json({message: "User already exists"}, { status: 400 });
-    }
+    // const user=await User.find({email})
+    // if(user){
+    //   return NextResponse.json({message: "User already exists"}, { status: 400 });
+    // }
 
     //hashing password
     const salt=await bcrypt.genSalt(10);

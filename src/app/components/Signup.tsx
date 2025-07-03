@@ -1,5 +1,6 @@
 'use client';
 
+import { usePostUserDataMutation } from '@/store/services/blogApi';
 import { useState } from 'react';
 
 type SignupForm = {
@@ -13,6 +14,7 @@ type SignupForm = {
 type Errors = Partial<Record<keyof SignupForm, string>>; //we use record when all the input fields type are same
 
 export default function Signup() {
+   const [postUserData, { isLoading, isError, isSuccess }] = usePostUserDataMutation();
   const [form, setForm] = useState<SignupForm>({
     name: '',
     email: '',
@@ -42,13 +44,18 @@ export default function Signup() {
     setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log('✅ Signup Data:', form);
-      // Submit to API or auth provider
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (validate()) {
+    try {
+      const result = await postUserData(form).unwrap();
+      console.log('✅ User created:', result);
+    } catch (error) {
+      console.error('❌ Signup failed:', error);
     }
-  };
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-base-200">
