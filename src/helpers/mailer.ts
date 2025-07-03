@@ -1,17 +1,29 @@
+import User from '@/models/userModel';
+import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 
 
 
 export const sendEmail=async({email,emailType,userId}:any)=>{
     try {
-        const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
+
+    const hashedToken = await bcrypt.hash(userId.toString(), 10)
+
+      if(emailType ==='VERIFY'){
+        await User.findByIdAndUpdate(userId,{verifyToken:hashedToken,verifyTokenExpiry:Date.now() + 3600000}) // 1 hour expiry
+      }else if(emailType === 'RESET'){
+        await User.findByIdAndUpdate(userId,{forgotPasswordToken:hashedToken,forgotPasswordTokenExpiry:Date.now() + 3600000}) // 1 hour expiry
+      }
+
+
+
+  var transport = nodemailer.createTransport({
+  host: "live.smtp.mailtrap.io",
   port: 587,
-  secure: false, // true for 465, false for other ports
   auth: {
-    user: "maddison53@ethereal.email",
-    pass: "jn7jnAPss4f63QBp6D",
-  },
+    user: "api",
+    pass: "61b9a678cc37cb925384359572b97593"
+  }
 });
 
 
@@ -20,9 +32,11 @@ const mailOptions={
     to: email,
     subject: emailType === 'VERIFY' ? 'Verify your email' : 'Reset your password',
     
-    html: "<b>Hello world?</b>", // HTML body
+    html: `<p>click <a href="${process.env.NEXTAUTH_URL}/verifyemail?token=${hashedToken}">here</a> to ${emailType === 'VERIFY' ? 'verify your email' : 'reset your password'} or copy and paste the link below in your browser. </br>
+    ${process.env.NEXTAUTH_URL}/verifyemail?token=${hashedToken}
+    </p>`, // HTML body
   }
-const mailResponse= await transporter.sendMail(mailOptions);
+const mailResponse= await transport.sendMail(mailOptions);
         console.log('Email sent successfully');
         return mailResponse;
 
@@ -30,3 +44,5 @@ const mailResponse= await transporter.sendMail(mailOptions);
         console.error('Error sending email:', error);
     }
 }
+
+

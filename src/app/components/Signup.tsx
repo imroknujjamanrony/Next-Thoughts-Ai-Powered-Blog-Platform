@@ -6,7 +6,7 @@ type SignupForm = {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  // confirmPassword: string;
 };
 
 //we use partial to make all fields optional
@@ -17,7 +17,7 @@ export default function Signup() {
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    
   });
 
   const [errors, setErrors] = useState<Errors>({});
@@ -28,7 +28,7 @@ export default function Signup() {
     if (!form.name.trim()) newErrors.name = 'Name is required';
     if (!form.email.includes('@')) newErrors.email = 'Invalid email format';
     if (form.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (form.password !== form.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    // if (form.password !== form.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -99,7 +99,7 @@ export default function Signup() {
           </div>
 
           {/* Confirm Password */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium mb-1">Confirm Password</label>
             <input
               type="password"
@@ -110,7 +110,7 @@ export default function Signup() {
               className="w-full p-3 border rounded-lg bg-base-100"
             />
             {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
-          </div>
+          </div> */}
 
           <button
             type="submit"

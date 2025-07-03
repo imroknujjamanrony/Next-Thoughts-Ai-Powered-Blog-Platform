@@ -17,11 +17,11 @@ const userSchema=new mongoose.Schema({
         required:true,
         minlength:5
     },
-    confirmPassword:{
-        type:String,
-        required:true,
-        minlength:5
-    },
+    // confirmPassword:{
+    //     type:String,
+    //     required:true,
+    //     minlength:5
+    // },
     isVerified:{
         type:Boolean,
         default:false
