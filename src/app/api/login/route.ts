@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 
 dbConnect()
@@ -27,9 +28,13 @@ export async function POST(request:NextRequest) {
         name:user.name,
         email:user.email
     }
+  const token = jwt.sign(tokenData, process.env.TOKEN_SECRET as string, { expiresIn: '1d' })
 
-  const token=await  jwt.signIn(tokenData,process.env.TOKEN_SECRET)
-
+   const response= NextResponse.json({message:'logged in success',success:true})
+   response.cookies.set('token',token,{
+    httpOnly:true
+   })
+return response
     } catch (error:any) {
         
         return NextResponse.json({error:error.message},{status:500})
