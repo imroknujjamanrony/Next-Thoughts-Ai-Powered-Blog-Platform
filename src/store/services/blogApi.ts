@@ -31,7 +31,7 @@ export const blogApi = createApi({
         method: 'POST',
         body: newUserData,
       }),
-      invalidatesTags: ['User'],
+      // No invalidatesTags or use ['Blog'] if you want to invalidate blogs
     }),
 
     // ✅ GET: All blogs
